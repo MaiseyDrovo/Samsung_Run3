@@ -1,22 +1,29 @@
 package ru.samsung.gamestudio;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import static ru.samsung.gamestudio.GameSettings.POSITION_ITERATIONS;
+import static ru.samsung.gamestudio.GameSettings.STEP_TIME;
+import static ru.samsung.gamestudio.GameSettings.VELOCITY_ITERATIONS;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 
+import ru.samsung.gamestudio.screens.GameScreen;
+
 public class MyGdxGame extends Game {
-	private SpriteBatch batch;
+	public SpriteBatch batch;
 	public OrthographicCamera camera;
 	GameScreen gameScreen;
 	GameSettings gameSettings;
 	public World world;
+    public Vector3 touch;
+
+    float accumulator = 0;
 
 	@Override
 	public void create() {
@@ -30,14 +37,24 @@ public class MyGdxGame extends Game {
 		setScreen(gameScreen);
 	}
 
-	@Override
-	public void render() {
-		batch.begin();
-		batch.end();
-	}
+//	@Override
+//	public void render() {
+//		batch.begin();
+//		batch.end();
+//	}
 
 	@Override
 	public void dispose() {
 		batch.dispose();
 	}
+
+    public void stepWorld() {
+        float delta = Gdx.graphics.getDeltaTime();
+        accumulator += delta;
+
+        if (accumulator >= STEP_TIME) {
+            accumulator -= STEP_TIME;
+            world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        }
+    }
 }
