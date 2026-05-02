@@ -2,6 +2,7 @@ package ru.samsung.gamestudio;
 
 import com.badlogic.gdx.utils.TimeUtils;
 
+
 public class GameSession {
 
     long nextTrashSpawnTime;
