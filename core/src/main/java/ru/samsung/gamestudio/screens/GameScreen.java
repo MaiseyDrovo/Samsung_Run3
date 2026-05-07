@@ -1,4 +1,3 @@
-//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
 package ru.samsung.gamestudio.screens;
 
 import com.badlogic.gdx.Gdx;
