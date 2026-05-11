@@ -1,8 +1,5 @@
 package ru.samsung.gamestudio.screens;
 
-import static ru.samsung.gamestudio.GameState.PAUSED;
-import static ru.samsung.gamestudio.GameState.PLAYING;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -14,6 +11,7 @@ import ru.samsung.gamestudio.components.ImageView;
 import ru.samsung.gamestudio.components.LiveView;
 import ru.samsung.gamestudio.components.MovingBackgroundView;
 import ru.samsung.gamestudio.components.TextView;
+import ru.samsung.gamestudio.managers.ContactManager;
 import ru.samsung.gamestudio.objects.BulletObject;
 import ru.samsung.gamestudio.objects.ShipObject;
 import ru.samsung.gamestudio.objects.TrashObject;
@@ -98,6 +96,7 @@ public class GameScreen extends ScreenAdapter {
                     myGdxGame.world
                 );
                 bulletArray.add(laserBullet);
+                if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.shootSound.play();
             }
 
             if (!shipObject.isAlive()) {
@@ -170,7 +169,14 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateTrash() {
         for (int i = 0; i < trashArray.size(); i++) {
-            if (!trashArray.get(i).isInFrame() || !trashArray.get(i).isAlive()) {
+
+            boolean hasToBeDestroyed = !trashArray.get(i).isAlive() || !trashArray.get(i).isInFrame();
+
+            if (!trashArray.get(i).isAlive()) {
+                if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.explosionSound.play(0.2f);
+            }
+
+            if (hasToBeDestroyed) {
                 myGdxGame.world.destroyBody(trashArray.get(i).body);
                 trashArray.remove(i--);
             }
