@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import ru.samsung.gamestudio.screens.GameScreen;
+import ru.samsung.gamestudio.screens.MenuScreen;
 
 import static ru.samsung.gamestudio.GameSettings.*;
 
@@ -28,6 +29,7 @@ public class MyGdxGame extends Game {
 
 
     public GameScreen gameScreen;
+    public MenuScreen menuScreen;
 
     float accumulator = 0;
 
@@ -46,8 +48,9 @@ public class MyGdxGame extends Game {
         commonBlackFont = FontBuilder.generate(24, Color.BLACK, GameResources.FONT_PATH);
 
         gameScreen = new GameScreen(this);
+        menuScreen = new MenuScreen(this);
 
-        setScreen(gameScreen);
+        setScreen(menuScreen);
     }
 
     @Override
