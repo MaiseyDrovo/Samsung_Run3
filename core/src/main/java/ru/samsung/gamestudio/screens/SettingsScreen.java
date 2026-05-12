@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.util.ArrayList;
 
 import ru.samsung.gamestudio.GameResources;
 import ru.samsung.gamestudio.MyGdxGame;
@@ -12,6 +15,7 @@ import ru.samsung.gamestudio.components.ButtonView;
 import ru.samsung.gamestudio.components.ImageView;
 import ru.samsung.gamestudio.components.MovingBackgroundView;
 import ru.samsung.gamestudio.components.TextView;
+import ru.samsung.gamestudio.managers.MemoryManager;
 
 public class SettingsScreen extends ScreenAdapter {
 
@@ -31,16 +35,10 @@ public class SettingsScreen extends ScreenAdapter {
         backgroundView = new MovingBackgroundView(GameResources.BACKGROUND_IMG_PATH);
         titleTextView = new TextView(myGdxGame.largeWhiteFont, 256, 956, "Settings");
         blackoutImageView = new ImageView(85, 365, GameResources.BLACKOUT_MIDDLE_IMG_PATH);
-        musicSettingView = new TextView(myGdxGame.commonWhiteFont, 173, 717, "music: " + "ON");
-        soundSettingView = new TextView(myGdxGame.commonWhiteFont, 173, 658, "sound: " + "ON");
+        musicSettingView = new TextView(myGdxGame.commonWhiteFont, 173, 717, "music: " + translateStateToText(MemoryManager.loadIsMusicOn()));
+        soundSettingView = new TextView(myGdxGame.commonWhiteFont, 173, 658, "sound: " + translateStateToText(MemoryManager.loadIsSoundOn()));
         clearSettingView = new TextView(myGdxGame.commonWhiteFont, 173, 599, "clear records");
-        returnButton = new ButtonView(
-            280, 447,
-            160, 70,
-            myGdxGame.commonBlackFont,
-            GameResources.BUTTON_SHORT_BG_IMG_PATH,
-            "return"
-        );
+        returnButton = new ButtonView(280, 447, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "return");
     }
 
     @Override
@@ -73,16 +71,25 @@ public class SettingsScreen extends ScreenAdapter {
                 myGdxGame.setScreen(myGdxGame.menuScreen);
             }
             if (clearSettingView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                MemoryManager.saveTableOfRecords(new ArrayList<>());
                 clearSettingView.setText("clear records (cleared)");
+
+                com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+                    @Override
+                    public void run() {
+                        clearSettingView.setText("clear records"); // Возвращаем старый текст
+                    }
+                }, 2f);
             }
             if (musicSettingView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                myGdxGame.audioManager.isMusicOn = !myGdxGame.audioManager.isMusicOn;
-                musicSettingView.setText("music: " + translateStateToText(myGdxGame.audioManager.isMusicOn));
+                MemoryManager.saveMusicSettings(!MemoryManager.loadIsMusicOn());
+                musicSettingView.setText("music: " + translateStateToText(MemoryManager.loadIsMusicOn()));
                 myGdxGame.audioManager.updateMusicFlag();
             }
             if (soundSettingView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                myGdxGame.audioManager.isSoundOn = !myGdxGame.audioManager.isSoundOn;
-                soundSettingView.setText("sound: " + translateStateToText(myGdxGame.audioManager.isSoundOn));
+                MemoryManager.saveSoundSettings(!MemoryManager.loadIsSoundOn());
+                soundSettingView.setText("sound: " + translateStateToText(MemoryManager.loadIsSoundOn()));
+                myGdxGame.audioManager.updateSoundFlag();
             }
         }
     }
