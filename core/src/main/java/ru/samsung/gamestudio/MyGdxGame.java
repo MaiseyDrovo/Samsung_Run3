@@ -35,6 +35,8 @@ public class MyGdxGame extends Game {
     public MenuScreen menuScreen;
     public SettingsScreen settingsScreen;
 
+    GameSession gameSession;
+
     public AudioManager audioManager;
 
     float accumulator = 0;
@@ -57,9 +59,12 @@ public class MyGdxGame extends Game {
         menuScreen = new MenuScreen(this);
         settingsScreen = new SettingsScreen(this);
 
+        gameSession = new GameSession();
+
         audioManager = new AudioManager();
 
         setScreen(menuScreen);
+//        gameSession.resumeGame();
     }
 
     @Override

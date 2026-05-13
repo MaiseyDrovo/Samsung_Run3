@@ -45,6 +45,7 @@ public class GameScreen extends ScreenAdapter {
     TextView recordsTextView;
     RecordsListView recordsListView;
     ButtonView homeButton2;
+    ButtonView restartButton;
 
     public GameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
@@ -69,7 +70,8 @@ public class GameScreen extends ScreenAdapter {
 
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
-        homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
+        homeButton2 = new ButtonView(138, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
+        restartButton = new ButtonView(393, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Restart");
     }
 
     @Override
@@ -146,6 +148,9 @@ public class GameScreen extends ScreenAdapter {
                     if (homeButton2.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                         myGdxGame.setScreen(myGdxGame.menuScreen);
                     }
+                    if (restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                        restartGame();
+                    }
                     break;
             }
 
@@ -159,6 +164,7 @@ public class GameScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.CLEAR);
 
         myGdxGame.batch.begin();
+
         backgroundView.draw(myGdxGame.batch);
         for (TrashObject trash : trashArray) trash.draw(myGdxGame.batch);
         shipObject.draw(myGdxGame.batch);
@@ -178,6 +184,7 @@ public class GameScreen extends ScreenAdapter {
             recordsTextView.draw(myGdxGame.batch);
             recordsListView.draw(myGdxGame.batch);
             homeButton2.draw(myGdxGame.batch);
+            restartButton.draw(myGdxGame.batch);
         }
 
         myGdxGame.batch.end();
